@@ -16,10 +16,15 @@ public final class Negociacao {
 	}
 
 	public Calendar getData() {
-		return data;
+		return (Calendar) this.data.clone();
 	}
 
 	public Negociacao(double preco, int quantidade, Calendar data) {
+		
+		if (data == null){
+			throw new IllegalArgumentException("A data n‹o pode ser nula");
+		}
+		
 		this.preco = preco;
 		this.quantidade = quantidade;
 		this.data = data;
