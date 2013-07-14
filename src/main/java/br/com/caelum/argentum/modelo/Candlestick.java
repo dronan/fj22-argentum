@@ -45,6 +45,23 @@ public final class Candlestick {
 
 	public Candlestick(double abertura, double fechamento, double minimo,
 			double maximo, double volume, Calendar data) {
+
+		if (minimo > maximo) {
+			throw new IllegalArgumentException(
+					"o valor minimo n‹o pode ser maior que o maximo");
+		}
+
+		if (data == null) {
+			throw new IllegalArgumentException(
+					"o valor minimo n‹o pode ser maior que o maximo");
+		}
+
+		if ((abertura < 0) || (fechamento < 0) || (minimo < 0) || (maximo < 0)
+				|| (volume < 0)) {
+			throw new IllegalArgumentException(
+					"valores inferiores a zero");
+		}
+
 		this.abertura = abertura;
 		this.fechamento = fechamento;
 		this.minimo = minimo;
@@ -52,11 +69,13 @@ public final class Candlestick {
 		this.volume = volume;
 		this.data = data;
 	}
-	
+
 	@Override
 	public String toString() {
 		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-		return "Abertura "+ abertura +", Fechamento "+ fechamento +", Minima "+minimo+", Maxima "+maximo+", Volume "+volume+", Data "+df.format(this.data.getTime());
+		return "Abertura " + abertura + ", Fechamento " + fechamento
+				+ ", Minima " + minimo + ", Maxima " + maximo + ", Volume "
+				+ volume + ", Data " + df.format(this.data.getTime());
 	}
-	
+
 }
