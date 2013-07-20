@@ -47,4 +47,24 @@ public class NegociacaoTest {
 		assertTrue(negociacao.isMesmoDia(tarde));
 	}
 
+	@Test
+	public void mesmoDiaMasMesesDiferentesNaoSaoDoMesmoDia(){
+		Calendar mesNove = new GregorianCalendar(2011, 9, 20);
+		Calendar mesDez = new GregorianCalendar(2011, 10, 20);
+		
+		Negociacao negociacao = new Negociacao(40.0, 100, mesNove);
+		
+		assertFalse(negociacao.isMesmoDia(mesDez));		
+	}
+	
+	@Test
+	public void mesmoDiaMasAnosDiferentesNaoSaoDoMesmoDia(){
+		Calendar doisMilEDez = new GregorianCalendar(2010, 10, 20);
+		Calendar doisMilEOnze = new GregorianCalendar(2011, 10, 20);
+		
+		Negociacao negociacao = new Negociacao(40.0, 100, doisMilEOnze);
+		
+		assertFalse(negociacao.isMesmoDia(doisMilEDez));		
+	}
+	
 }
