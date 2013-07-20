@@ -1,9 +1,13 @@
 package br.com.caelum.argentum.modelo;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
+
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-
-import static junit.framework.Assert.*;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -41,30 +45,70 @@ public class NegociacaoTest {
 	public void comHorariosDiferentesEhNoMesmoDia() {
 		Calendar manha = new GregorianCalendar(2011, 10, 20, 8, 30);
 		Calendar tarde = new GregorianCalendar(2011, 10, 20, 15, 30);
-		
+
 		Negociacao negociacao = new Negociacao(40.0, 100, manha);
-		
+
 		assertTrue(negociacao.isMesmoDia(tarde));
 	}
 
 	@Test
-	public void mesmoDiaMasMesesDiferentesNaoSaoDoMesmoDia(){
+	public void mesmoDiaMasMesesDiferentesNaoSaoDoMesmoDia() {
 		Calendar mesNove = new GregorianCalendar(2011, 9, 20);
 		Calendar mesDez = new GregorianCalendar(2011, 10, 20);
-		
+
 		Negociacao negociacao = new Negociacao(40.0, 100, mesNove);
-		
-		assertFalse(negociacao.isMesmoDia(mesDez));		
+
+		assertFalse(negociacao.isMesmoDia(mesDez));
 	}
-	
+
 	@Test
-	public void mesmoDiaMasAnosDiferentesNaoSaoDoMesmoDia(){
+	public void mesmoDiaMasAnosDiferentesNaoSaoDoMesmoDia() {
 		Calendar doisMilEDez = new GregorianCalendar(2010, 10, 20);
 		Calendar doisMilEOnze = new GregorianCalendar(2011, 10, 20);
-		
+
 		Negociacao negociacao = new Negociacao(40.0, 100, doisMilEOnze);
-		
-		assertFalse(negociacao.isMesmoDia(doisMilEDez));		
+
+		assertFalse(negociacao.isMesmoDia(doisMilEDez));
 	}
-	
+
+	@Test
+	public void paraNegociacoesDeTresDiasDistintosGeraTresCandles() {
+		Calendar hoje = Calendar.getInstance();
+
+		Negociacao negociacao1 = new Negociacao(40.5, 100, hoje);
+		Negociacao negociacao2 = new Negociacao(45.0, 100, hoje);
+		Negociacao negociacao3 = new Negociacao(39.8, 100, hoje);
+		Negociacao negociacao4 = new Negociacao(42.3, 100, hoje);
+
+		Calendar amanha = (Calendar) hoje.clone();
+		amanha.add(Calendar.DAY_OF_MONTH, 1);
+
+		Negociacao negociacao5 = new Negociacao(48.8, 100, amanha);
+		Negociacao negociacao6 = new Negociacao(49.3, 100, amanha);
+
+		Calendar depois = (Calendar) amanha.clone();
+		depois.add(Calendar.DAY_OF_MONTH, 1);
+
+		Negociacao negociacao7 = new Negociacao(51.8, 100, depois);
+		Negociacao negociacao8 = new Negociacao(52.3, 100, depois);
+
+		List<Negociacao> negociacoes = Arrays.asList(negociacao1, negociacao2,
+				negociacao3, negociacao4, negociacao5, negociacao6,
+				negociacao7, negociacao8);
+
+		CandlestickFactory fabrica = new CandlestickFactory();
+
+		List<Candlestick> candles = fabrica.constroiCandles(negociacoes);
+
+		assertEquals(3, candles.size());
+		assertEquals(40.5, candles.get(0).getAbertura(), 0.000001);
+		assertEquals(42.3, candles.get(0).getFechamento(), 0.000001);
+		assertEquals(48.8, candles.get(1).getAbertura(),0.000001);
+		assertEquals(49.3, candles.get(1).getFechamento(), 0.00001);
+		assertEquals(51.8, candles.get(2).getAbertura(),0.000001);
+		assertEquals(52.3, candles.get(2).getFechamento(), 0.00001);
+		
+
+	}
+
 }
