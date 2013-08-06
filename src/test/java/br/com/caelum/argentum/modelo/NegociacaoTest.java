@@ -148,4 +148,39 @@ public class NegociacaoTest {
 
 	}
 
+	@Test
+	public void constroiCandlesOrdenadasPorData() {
+		Calendar hoje = Calendar.getInstance();
+		Calendar amanha = (Calendar) hoje.clone();
+		amanha.add(Calendar.DAY_OF_MONTH, 1);
+		Calendar depois = (Calendar) amanha.clone();
+		depois.add(Calendar.DAY_OF_MONTH, 1);
+
+		Negociacao negociacao1 = new Negociacao(40.5, 100, hoje);
+		Negociacao negociacao2 = new Negociacao(45.0, 100, hoje);
+
+		Negociacao negociacao5 = new Negociacao(48.8, 100, amanha);
+		Negociacao negociacao6 = new Negociacao(49.3, 100, amanha);
+
+		Negociacao negociacao3 = new Negociacao(39.8, 100, hoje);
+		Negociacao negociacao4 = new Negociacao(42.3, 100, hoje);
+		Negociacao negociacao8 = new Negociacao(52.3, 100, depois);
+
+		Negociacao negociacao7 = new Negociacao(51.8, 100, depois);
+
+		List<Negociacao> negociacoes = Arrays.asList(negociacao5, negociacao7,
+				negociacao1, negociacao4, negociacao3, negociacao2,
+				negociacao8, negociacao6);
+
+		CandlestickFactory fabrica = new CandlestickFactory();
+
+		List<Candlestick> candles = fabrica.constroiCandles(negociacoes);
+
+		assertEquals(3, candles.size());
+		assertEquals(hoje, candles.get(0).getData());
+		assertEquals(amanha, candles.get(1).getData());
+		assertEquals(depois, candles.get(2).getData());
+
+	}
+
 }

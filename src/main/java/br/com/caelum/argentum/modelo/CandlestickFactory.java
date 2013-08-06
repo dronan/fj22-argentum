@@ -2,13 +2,14 @@ package br.com.caelum.argentum.modelo;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 public class CandlestickFactory {
 
 	public Candlestick constroiCandleParaData(Calendar data,
 			List<Negociacao> negociacoes) {
-
+		
 		// double maximo = Double.MIN_VALUE; //negociacoes.get(0).getPreco();
 		double maximo = negociacoes.isEmpty() ? 0 : negociacoes.get(0)
 				.getPreco();
@@ -20,6 +21,7 @@ public class CandlestickFactory {
 		double volume = 0;
 
 		for (Negociacao negociacao : negociacoes) {
+			
 			volume += negociacao.getVolume();
 
 			if (negociacao.getPreco() > maximo) {
@@ -40,12 +42,16 @@ public class CandlestickFactory {
 	}
 
 	public List<Candlestick> constroiCandles(List<Negociacao> todasNegociacoes) {
+		
+		Collections.sort(todasNegociacoes);
+		
 		List<Candlestick> candles = new ArrayList<Candlestick>();
 		List<Negociacao> negociacoesDoDia = new ArrayList<Negociacao>();
 
 		Calendar dataAtual = todasNegociacoes.get(0).getData();
 
 		for (Negociacao negociacao : todasNegociacoes) {
+			
 			if (negociacao.getData().before(dataAtual)){
 				throw new IllegalStateException("negociacao em ordem errada");
 			}
